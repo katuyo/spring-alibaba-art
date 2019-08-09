@@ -1,0 +1,70 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.7.RELEASE'
+        springCloudVersion = 'Finchley.SR2'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'java'
+    id "io.spring.dependency-management" version "1.0.5.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'org.featx.katuyo'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    baseName = "${project.name}"
+    version = "${project.version}"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://artifacts.elastic.co/maven" }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:3.0.0-beta-3'
+    compile "com.google.guava:guava:28.0-jre"
+    compile "redis.clients:jedis:3.1.0"
+
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-undertow:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+configurations {
+    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    compile.exclude group: 'org.apache.tomcat'
+    compile.exclude group: 'org.apache.tomcat.embed'
+    compile.exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+    //all*.exclude module: 'spring-boot-starter-logging'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
